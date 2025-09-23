@@ -92,18 +92,18 @@ class PhoneInputFormatter extends TextInputFormatter {
     if (shouldCorrectNumber && onlyNumbers.length >= 2) {
       /// хак специально для России, со вводом номера с восьмерки
       /// меняем ее на 7, но только если это не бразильский номер
-       final isRussianWrongNumber = onlyNumbers.startsWith('89');
-
+      final isRussianWrongNumber = onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
       if (isRussianWrongNumber && defaultCountryCode == null) {
-        final fixedNumber = '7${onlyNumbers.substring(1)}';
-        final isRussian = PhoneCodes.getCountryDataByPhone(fixedNumber)?.countryCode == 'RU';
+        final correctedNumber = '7${onlyNumbers.substring(1)}';
+        final detectedCountry = PhoneCodes.getCountryDataByPhone(correctedNumber);
+        final russianData = PhoneCodes.getPhoneCountryDataByCountryCode('RU');
 
-        if (isRussian) {
-          onlyNumbers = fixedNumber;
+        if (detectedCountry != null && detectedCountry == russianData) {
+          onlyNumbers = correctedNumber;
           _countryData = null;
           _applyMask('7', allowEndlessPhone);
-          }
         }
+      }
       final isAustralianPhoneNumber =
           onlyNumbers[0] == '0' && onlyNumbers[1] == '4';
       if (isAustralianPhoneNumber) {
