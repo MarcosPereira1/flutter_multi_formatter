@@ -89,11 +89,10 @@ class PhoneInputFormatter extends TextInputFormatter {
         _clearCountry();
       }
     }
-    if (shouldCorrectNumber && onlyNumbers.length >= 2) {
+       if (shouldCorrectNumber && onlyNumbers.length >= 2) {
       /// хак специально для России, со вводом номера с восьмерки
       /// меняем ее на 7, но только если это не бразильский номер
-      final isRussianWrongNumber =
-          onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
+      final isRussianWrongNumber = onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
       if (isRussianWrongNumber && defaultCountryCode == null) {
         final countryData = PhoneCodes.getCountryDataByPhone(onlyNumbers);
         if (countryData == null) {
