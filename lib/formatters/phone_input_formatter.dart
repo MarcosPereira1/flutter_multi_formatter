@@ -94,16 +94,17 @@ class PhoneInputFormatter extends TextInputFormatter {
       /// меняем ее на 7, но только если это не бразильский номер
       final isRussianWrongNumber = onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
       if (isRussianWrongNumber && defaultCountryCode == null) {
-        final correctedNumber = '7${onlyNumbers.substring(1)}';
-        final detectedCountry = PhoneCodes.getCountryDataByPhone(correctedNumber);
-        final russianData = PhoneCodes.getPhoneCountryDataByCountryCode('RU');
-
-        if (detectedCountry != null && detectedCountry == russianData) {
-          onlyNumbers = correctedNumber;
+        // Verifica se o número original não é reconhecido como outro país
+        final originalCountry = PhoneCodes.getCountryDataByPhone(onlyNumbers);
+        if (originalCountry == null) {
+          // Se não é reconhecido, aplica a correção russa
+          onlyNumbers = '7${onlyNumbers.substring(1)}';
           _countryData = null;
           _applyMask('7', allowEndlessPhone);
         }
       }
+
+
       final isAustralianPhoneNumber =
           onlyNumbers[0] == '0' && onlyNumbers[1] == '4';
       if (isAustralianPhoneNumber) {
