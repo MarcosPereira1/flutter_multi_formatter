@@ -104,7 +104,6 @@ class PhoneInputFormatter extends TextInputFormatter {
           _applyMask('7', allowEndlessPhone);
           }
         }
-      }
       final isAustralianPhoneNumber =
           onlyNumbers[0] == '0' && onlyNumbers[1] == '4';
       if (isAustralianPhoneNumber) {
