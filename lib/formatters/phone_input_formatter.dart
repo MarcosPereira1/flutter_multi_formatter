@@ -91,12 +91,20 @@ class PhoneInputFormatter extends TextInputFormatter {
     }
     if (shouldCorrectNumber && onlyNumbers.length >= 2) {
       /// хак специально для России, со вводом номера с восьмерки
-      /// меняем ее на 7, но только если номер не определяется как другая страна
+      /// меняем ее на 7, но только se não há país padrão definido
       final startsWithEight = onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
+      
+      // DEBUG: Vamos ver o que está acontecendo
       if (startsWithEight) {
+        print('DEBUG: onlyNumbers=$onlyNumbers, defaultCountryCode=$defaultCountryCode');
+      }
+      
+      if (startsWithEight && defaultCountryCode == null) {
+        // Só aplica correção russa se não há país padrão definido
+        // Isso evita converter DDDs brasileiros quando o usuário está no Brasil
         final existingCountryData = PhoneCodes.getCountryDataByPhone(onlyNumbers);
         
-        if (existingCountryData == null) {
+        if (existingCountryData == null && onlyNumbers.length >= 11) {
           onlyNumbers = '7${onlyNumbers.substring(1)}';
           _countryData = null;
           _applyMask(
