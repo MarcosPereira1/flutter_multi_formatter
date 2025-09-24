@@ -100,7 +100,6 @@ class PhoneInputFormatter extends TextInputFormatter {
         _countryData = null;
         _applyMask('7', allowEndlessPhone);
       }
-    }
 
       final isAustralianPhoneNumber =
           onlyNumbers[0] == '0' && onlyNumbers[1] == '4';
