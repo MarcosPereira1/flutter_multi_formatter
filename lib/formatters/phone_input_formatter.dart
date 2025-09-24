@@ -90,17 +90,6 @@ class PhoneInputFormatter extends TextInputFormatter {
       }
     }
     if (shouldCorrectNumber && onlyNumbers.length >= 2) {
-      /// хак специально для России, со вводом номера с восьмерки
-      /// меняем ее на 7, но только если это не бразильский номер
-    final isRussianWrongNumber = onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
-    if (isRussianWrongNumber && defaultCountryCode == null) {
-      final originalCountry = PhoneCodes.getCountryDataByPhone(onlyNumbers);
-      if (originalCountry == null) {
-        onlyNumbers = '7${onlyNumbers.substring(1)}';
-        _countryData = null;
-        _applyMask('7', allowEndlessPhone);
-      }
-
       final isAustralianPhoneNumber =
           onlyNumbers[0] == '0' && onlyNumbers[1] == '4';
       if (isAustralianPhoneNumber) {
@@ -111,7 +100,7 @@ class PhoneInputFormatter extends TextInputFormatter {
     }
 
     maskedValue = _applyMask(onlyNumbers, allowEndlessPhone);
-    if (maskedValue == oldValue.text && onlyNumbers != '7') {
+    if (maskedValue == oldValue.text) {
       _lastValue = maskedValue;
       if (isErasing) {
         var newSelection = oldValue.selection;
