@@ -89,31 +89,15 @@ class PhoneInputFormatter extends TextInputFormatter {
         _clearCountry();
       }
     }
-    if (shouldCorrectNumber && onlyNumbers.length >= 2) {
-      /// хак специально для России, со вводом номера с восьмерки
-      /// меняем ее на 7, но только se não há país padrão definido
-      final startsWithEight = onlyNumbers[0] == '8' && onlyNumbers[1] == '9';
-      
-      // DEBUG: Vamos ver o que está acontecendo
-      if (startsWithEight) {
-        print('DEBUG: onlyNumbers=$onlyNumbers, defaultCountryCode=$defaultCountryCode');
-      }
-      
-      if (startsWithEight && defaultCountryCode == null) {
-        // Só aplica correção russa se não há país padrão definido
-        // Isso evita converter DDDs brasileiros quando o usuário está no Brasil
-        final existingCountryData = PhoneCodes.getCountryDataByPhone(onlyNumbers);
-        
-        if (existingCountryData == null && onlyNumbers.length >= 11) {
-          onlyNumbers = '7${onlyNumbers.substring(1)}';
+        if (shouldCorrectNumber && onlyNumbers.startsWith('89')) {
+        final fixedNumber = '7${onlyNumbers.substring(1)}';
+
+        if (PhoneCodes.getCountryDataByPhone(fixedNumber)?.countryCode == 'RU') {
+          onlyNumbers = fixedNumber;
           _countryData = null;
-          _applyMask(
-            '7',
-            allowEndlessPhone,
-          );
+          _applyMask('7', allowEndlessPhone);
         }
       }
-
       final isAustralianPhoneNumber =
           onlyNumbers[0] == '0' && onlyNumbers[1] == '4';
       if (isAustralianPhoneNumber) {
